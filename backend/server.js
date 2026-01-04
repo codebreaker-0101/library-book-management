@@ -1,9 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const Book = require("./models/Book");
 
-const app = express();
+const app = express();         
+app.use(cors());                
 app.use(express.json());
 
 // MongoDB connection
@@ -16,15 +18,13 @@ app.get("/", (req, res) => {
   res.send("Library API running");
 });
 
-/* ================= CREATE ================= */
-// Add single OR multiple books
+/* ================= 1. CREATE ================= */
 app.post("/books", async (req, res) => {
   try {
     if (Array.isArray(req.body)) {
       const books = await Book.insertMany(req.body);
       return res.status(201).json(books);
     }
-
     const book = await Book.create(req.body);
     res.status(201).json(book);
   } catch (err) {
@@ -32,14 +32,12 @@ app.post("/books", async (req, res) => {
   }
 });
 
-/* ================= READ ================= */
-// Get all books
+/* ================= 2. READ ================= */
 app.get("/books", async (req, res) => {
   const books = await Book.find();
   res.json(books);
 });
 
-// Get books by category
 app.get("/books/category/:category", async (req, res) => {
   const books = await Book.find({ category: req.params.category });
   if (!books.length)
@@ -47,14 +45,12 @@ app.get("/books/category/:category", async (req, res) => {
   res.json(books);
 });
 
-// Books after 2015
 app.get("/books/after/2015", async (req, res) => {
   const books = await Book.find({ publishedYear: { $gt: 2015 } });
   res.json(books);
 });
 
-/* ================= UPDATE ================= */
-// Increase / Decrease copies
+/* ================= 3.UPDATE ================= */
 app.put("/books/:id/copies", async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book)
@@ -68,7 +64,6 @@ app.put("/books/:id/copies", async (req, res) => {
   res.json(book);
 });
 
-// Change category
 app.put("/books/:id/category", async (req, res) => {
   if (!req.body.category)
     return res.status(400).json({ message: "Invalid update" });
@@ -85,7 +80,7 @@ app.put("/books/:id/category", async (req, res) => {
   res.json(book);
 });
 
-/* ================= DELETE ================= */
+/* ================= 4.DELETE ================= */
 app.delete("/books/:id", async (req, res) => {
   const book = await Book.findById(req.params.id);
 
@@ -103,3 +98,4 @@ app.delete("/books/:id", async (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
+
