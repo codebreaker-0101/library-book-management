@@ -80,7 +80,7 @@ app.put("/books/:id/category", async (req, res) => {
   res.json(book);
 });
 
-/* ================= 4.DELETE ================= */
+/* ================= DELETE ================= */
 app.delete("/books/:id", async (req, res) => {
   const book = await Book.findById(req.params.id);
 
@@ -92,6 +92,18 @@ app.delete("/books/:id", async (req, res) => {
 
   await book.deleteOne();
   res.json({ message: "Book deleted" });
+});
+// DELETE ALL BOOKS
+app.delete("/books", async (req, res) => {
+  try {
+    const result = await Book.deleteMany({});
+    res.json({
+      message: "All books deleted",
+      deletedCount: result.deletedCount
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 /* ================= SERVER ================= */
