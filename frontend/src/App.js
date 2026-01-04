@@ -5,7 +5,10 @@ import "./App.css";
 
 function App() {
   const [books, setBooks] = useState([]);
-  const BACKEND = "http://localhost:5000";
+
+  // 🔴 CHANGE THIS ONLY WHEN DEPLOYING
+ const BACKEND = "http://localhost:5000";
+  // const BACKEND = "https://your-backend.onrender.com";
 
   const fetchBooks = async () => {
     const res = await fetch(`${BACKEND}/books`);
@@ -32,7 +35,7 @@ function App() {
   };
 
   return (
-    <div className="container"> 
+    <div className="container">
       <h1>Library Management</h1>
       <AddBookForm onAdd={addBook} />
       <BookList books={books} onDelete={deleteBook} />
