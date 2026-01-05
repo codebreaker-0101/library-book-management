@@ -6,8 +6,7 @@ import "./App.css";
 function App() {
   const [books, setBooks] = useState([]);
 
-  // 🔴 CHANGE THIS ONLY WHEN DEPLOYING
- const BACKEND = "http://localhost:5000";
+ const BACKEND = "https://library-book-management-plbw.onrender.com";
   // const BACKEND = "https://your-backend.onrender.com";
 
   const fetchBooks = async () => {
